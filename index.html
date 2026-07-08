@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Time Capsule</title>
+
+    <!-- COOL NEW FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #090d16;
+            color: white;
+            overflow-x: hidden;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            position: relative;
+        }
+
+        /* COOL ANIMATED GRADIENT BACKGROUND MESH */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(147, 51, 234, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.5) 0%, transparent 100%);
+            z-index: -1;
+            animation: meshGlow 15s ease infinite alternate;
+        }
+
+        @keyframes meshGlow {
+            0% { transform: scale(1) translate(0px, 0px); }
+            50% { transform: scale(1.1) translate(20px, -30px); }
+            100% { transform: scale(1) translate(-10px, 10px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 24px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(9, 13, 22, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        nav h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+        }
+
+        /* MAIN MENU (HERO) SECTION */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(9, 13, 22, 0.6), rgba(9, 13, 22, 0.9)),
+                        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 80px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #93c5fd, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        /* THE JOURNEY TIMELINE CARDS SECTION */
+        section {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 80px 0;
+        }
+
+        section h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            text-align: center;
+            font-size: 46px;
+            letter-spacing: -1px;
+            margin-bottom: 60px;
+            background: linear-gradient(to right, #ffffff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 35px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 24px;
+            overflow: hidden;
+            text-decoration: none;
+            color: white;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(40px);
+            transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1), 
+                        box-shadow 0.5s ease, 
+                        border 0.5s ease, 
+                        opacity 0.6s ease;
+        }
+
+        .card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* HOVER EFFECTS: BOLD GLASSMORPHISM AND NEON GLOW */
+        .card:hover {
+            transform: translateY(-12px);
+            border: 1px solid rgba(147, 51, 234, 0.4);
+            box-shadow: 0 20px 40px rgba(147, 51, 234, 0.15), 0 0 30px rgba(59, 130, 246, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .content {
+            padding: 28px;
+        }
+
+        .content h3 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 22px;
+            color: #60a5fa;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .card:hover .content h3 {
+            color: #c084fc;
+        }
+
+        .content p {
+            color: #94a3b8;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* QUOTE BOX */
+        .quote {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .quote.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .quote h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+        }
+
+        .quote p {
+            color: #cbd5e1;
+            font-size: 19px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* POPUP GALLERY MODAL */
+        .gallery-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 12, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 15px; /* Better spacing for mobile padding containers */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh; /* Better vertical scrolling view height on mobile screens */
+            border-radius: 28px;
+            padding: 30px 20px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .gallery-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 36px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .close-modal:hover {
+            color: #f43f5e;
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .modal-content h2 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            text-align: left;
+            margin-bottom: 25px;
+            font-size: 28px; /* Slightly scaled down title block base */
+            padding-right: 30px; /* Kept text out of close button hitbox boundary */
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adaptive 2-column mobile structure grids */
+            gap: 15px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 140px; /* Better sizing configurations for screen limits */
+            object-fit: cover;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.4s ease, opacity 0.5s ease;
+        }
+
+        .gallery-grid img.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.25);
+            border-color: rgba(147, 51, 234, 0.3);
+        }
+
+        /* LIGHTBOX ZOOM */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 5, 10, 0.98);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox img {
+            max-width: 95%; /* Clean responsive edge frame padding limits */
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+            transform: scale(0.93);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+        }
+
+        .lightbox.active img {
+            transform: scale(1);
+        }
+
+        footer {
+            background: #05070c;
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        /* =======================================================
+           MOBILE & TABLET ADAPTATIONS (MEDIA QUERIES)
+        ========================================================== */
+        @media(max-width: 768px) {
+            nav {
+                padding: 16px 5%;
+                flex-direction: row; /* Stays horizontal on smaller tablets too */
+            }
+            
+            nav h2 {
+                font-size: 20px;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+
+            nav a {
+                font-size: 14px;
+            }
+
+            .hero h1 { 
+                font-size: 44px; 
+                letter-spacing: -1px; 
+            }
+            
+            .hero p { 
+                font-size: 18px; 
+                margin-bottom: 30px;
+            }
+
+            .btn {
+                padding: 14px 32px;
+                font-size: 15px;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            section h2 { 
+                font-size: 32px; 
+                margin-bottom: 40px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr; /* Clean elegant single stack view on phone formats */
+                gap: 25px;
+            }
+
+            .card img {
+                height: 200px; /* Scales card cover previews for thumb scrolling proportions */
+            }
+
+            .quote {
+                padding: 40px 20px;
+            }
+
+            .quote h3 {
+                font-size: 26px;
+            }
+
+            .quote p {
+                font-size: 16px;
+            }
+
+            .modal-content {
+                padding: 25px 15px;
+            }
+
+            .modal-content h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Target smaller device screens */
+        @media (max-width: 380px) {
+            .hero h1 {
+                font-size: 38px;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h2>📸 The Time Capsule</h2>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#journey">Journey</a></li>
+            <li><a href="#quote">Quote</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN MENU HERO SECTION -->
+    <section class="hero">
+        <div>
+            <h1>THE TIME CAPSULE</h1>
+            <p>BS Computer Science &bull; Batch 2025 - 2029</p>
+            <a href="#journey" class="btn">Begin Our Journey</a>
+        </div>
+    </section>
+
+    <!-- THE JOURNEY TIMELINE CARDS -->
+    <section id="journey">
+        <h2>Choose a Year</h2>
+        <div class="cards">
+
+            <!-- FIRST YEAR -->
+            <div class="card" data-year="first-year" data-title="🎓 First Year Memories">
+                <img src="images/first-year.jpg" alt="First Year Cover">
+                <div class="content">
+                    <h3>First Year</h3>
+                    <p>Where we first met, made friends, and started our college journey together.</p>
+                </div>
+            </div>
+
+            <!-- SECOND YEAR -->
+            <div class="card" data-year="second-year" data-title="🎓 Second Year Memories">
+                <img src="images/second-year.jpg" alt="Second Year Cover">
+                <div class="content">
+                    <h3>Second Year</h3>
+                    <p>More memories, more challenges, and stronger friendships.</p>
+                </div>
+            </div>
+
+            <!-- THIRD YEAR -->
+            <div class="card" data-year="third-year" data-title="🎓 Third Year Memories">
+                <img src="images/third-year.jpg" alt="Third Year Cover">
+                <div class="content">
+                    <h3>Third Year</h3>
+                    <p>Countless projects, sleepless nights, and unforgettable experiences.</p>
+                </div>
+            </div>
+
+            <!-- FOURTH YEAR -->
+            <div class="card" data-year="fourth-year" data-title="🎓 Fourth Year Memories">
+                <img src="images/fourth-year.jpg" alt="Fourth Year Cover">
+                <div class="content">
+                    <h3>Fourth Year</h3>
+                    <p>The final chapter before graduation and the beginning of new dreams.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MODAL CONTAINER FOR INNER POPUPS -->
+    <div class="gallery-modal" id="galleryModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Photo Gallery</h2>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+    </div>
+
+    <!-- ZOOM LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <img id="preview" alt="Zoom Preview">
+    </div>
+
+    <!-- QUOTE SECTION -->
+    <section id="quote">
+        <div class="quote" id="quoteBox">
+            <h3>"We came as strangers. We leave as family."</h3>
+            <p>This website is dedicated to preserving every laugh, every challenge, every late-night project, every celebration, and every unforgettable memory we shared throughout our college journey.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>Every picture tells a story.</p>
+        <br>
+        <p>By James Mark Gregorio</p>
+    </footer>
+
+    <script>
+        // Set the number of photos inside each year's folder
+        const imageCounts = {
+            "first-year": 10,
+            "second-year": 8,
+            "third-year": 12,
+            "fourth-year": 6
+        };
+
+        const cards = document.querySelectorAll(".card");
+        const galleryModal = document.getElementById("galleryModal");
+        const closeModal = document.getElementById("closeModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const galleryGrid = document.getElementById("galleryGrid");
+        const lightbox = document.getElementById("lightbox");
+        const preview = document.getElementById("preview");
+        const quoteBox = document.getElementById("quoteBox");
+
+        // STAGGERED SCROLL REVEAL ANIMATION
+        const revealOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add("revealed");
+                    }, index * 120); 
+                    revealOnScroll.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => revealOnScroll.observe(card));
+        if(quoteBox) revealOnScroll.observe(quoteBox);
+
+        // IMAGES MODAL LOADER FOR INNER PHOTO GALLERIES
+        cards.forEach(card => {
+            card.onclick = () => {
+                const year = card.getAttribute("data-year");
+                const title = card.getAttribute("data-title");
+                const totalImages = imageCounts[year] || 0;
+
+                modalTitle.innerText = title;
+                galleryGrid.innerHTML = "";
+
+                for (let i = 1; i <= totalImages; i++) {
+                    const img = document.createElement("img");
+                    img.src = `images/${year}/${i}.jpg`;
+                    img.alt = `${year} memory ${i}`;
+                    
+                    img.onload = () => {
+                        setTimeout(() => {
+                            img.classList.add("loaded");
+                        }, i * 50);
+                    };
+
+                    img.onclick = (e) => {
+                        e.stopPropagation();
+                        lightbox.style.display = "flex";
+                        setTimeout(() => lightbox.classList.add("active"), 10);
+                        preview.src = img.src;
+                    };
+
+                    galleryGrid.appendChild(img);
+                }
+
+                galleryModal.style.display = "flex";
+                setTimeout(() => galleryModal.classList.add("active"), 10);
+                document.body.style.overflow = "hidden";
+            };
+        });
+
+        const closeGalleryModal = () => {
+            galleryModal.classList.remove("active");
+            setTimeout(() => {
+                galleryModal.style.display = "none";
+            }, 300);
+            document.body.style.overflow = "auto";
+        };
+
+        closeModal.onclick = closeGalleryModal;
+        galleryModal.onclick = (e) => { if (e.target === galleryModal) closeGalleryModal(); };
+
+        lightbox.onclick = () => {
+            lightbox.classList.remove("active");
+            setTimeout(() => {
+                lightbox.style.display = "none";
+            }, 250);
+        };
+    </script>
+</body>
+
+</html>
